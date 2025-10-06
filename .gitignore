@@ -1,0 +1,77 @@
+# ==========================================
+# 💡 Java / Maven / Spring Boot project
+# ==========================================
+
+# Maven
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/release.properties
+/.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+*.out
+*.err
+logs/
+!src/main/resources/logback-spring.xml
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+*.class
+
+# Eclipse / VSCode (por si alguien abre el repo allí)
+.project
+.classpath
+.settings/
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Spring Boot
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Docker / Compose
+.env
+docker-compose.override.yml
+*.pid
+
+# Test / Coverage
+/coverage/
+test-output/
+*.ser
+*.dat
+*.exec
+/jacoco-report/
+target/surefire-reports/
+
+# Temporary / Cache
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+
+# Generated metadata
+dependency-reduced-pom.xml
+spring.log
+
+# ==========================================
+# ✅ Custom para este proyecto
+# ==========================================
+
+# Archivos generados por carga/pruebas
+*.csv
+*.json
+*.db
