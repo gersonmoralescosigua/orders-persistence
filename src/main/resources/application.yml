@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/cursoGtk}
+    username: ${POSTGRES_USER:admin}
+    password: ${POSTGRES_PASSWORD:admin123}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    function:
+      definition: ingestPostgres
+    stream:
+      bindings:
+        ingestPostgres-in-0:
+          destination: ${TOPIC_IN:general.alimentos.retail.guatemala.procesada}
+          group: ${GROUP_IN:IngestaPostgres}
+          consumer:
+            concurrency: ${CONSUMER_CONCURRENCY:5}
+            meter:
+              enabled: false
+      binders:
+        local-solace:
+          type: solace
+          environment:
+            solace:
+              java:
+                host: ${SOLACE_HOST}
+                msgVpn: ${SOLACE_VPN}
+                clientUsername: ${SOLACE_USERNAME}
+                clientPassword: ${SOLACE_PASSWORD}
+                connectRetries: ${SOLACE_CONNECT_RETRIES:3}
+                connectRetriesPerHost: ${SOLACE_CONNECT_RETRIES_PER_HOST:0}
+                reconnectRetries: ${SOLACE_RECONNECT_RETRIES:3}
+      solace:
+        bindings:
+          ingestPostgres-in-0:
+            consumer:
+              queueAdditionalSubscriptions: ${TOPIC_SUB:general/alimentos/retail/guatemala/procesada}
+
+server:
+  port: ${SERVER_PORT:8094}
