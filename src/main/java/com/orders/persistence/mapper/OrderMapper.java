@@ -13,17 +13,13 @@ public final class OrderMapper {
     
     private OrderMapper() {}
 
-    /**
-     * Convierte un EventEnvelope a OrderEntity
-     */
-    public static OrderEntity toEntity(EventEnvelope envelope) throws JsonProcessingException {
+    public static OrderEntity toEntity(EventEnvelope envelope, String status) throws JsonProcessingException {
         if (envelope == null || envelope.getId() == null) {
             throw new IllegalArgumentException("Envelope o ID nulo");
         }
 
         var payload = envelope.getPayload();
-        String riskLevel = extractRiskLevel(envelope);
-        String status = determineStatus(riskLevel);
+        var meta = envelope.getMeta();
 
         return OrderEntity.builder()
                 .eventId(envelope.getId())
@@ -31,29 +27,12 @@ public final class OrderMapper {
                 .customerId(payload != null ? payload.getCustomerId() : null)
                 .currency(payload != null ? payload.getCurrency() : null)
                 .amount(payload != null ? payload.getAmount() : null)
-                .riskLevel(riskLevel)
+                .riskLevel(meta != null ? meta.getRiskLevel() : "LOW")
                 .status(status)
                 .createdAt(payload != null && payload.getCreatedAt() != null 
                     ? payload.getCreatedAt() 
                     : Instant.now())
                 .rawJson(objectMapper.writeValueAsString(envelope))
                 .build();
-    }
-
-    /**
-     * Extrae el riskLevel del metadata del envelope
-     */
-    private static String extractRiskLevel(EventEnvelope envelope) {
-        if (envelope.getMeta() != null && envelope.getMeta().get("riskLevel") != null) {
-            return String.valueOf(envelope.getMeta().get("riskLevel"));
-        }
-        return "LOW";
-    }
-
-    /**
-     * Determina el status basado en el riskLevel
-     */
-    private static String determineStatus(String riskLevel) {
-        return "HIGH".equalsIgnoreCase(riskLevel) ? "ON_HOLD" : "READY";
     }
 }

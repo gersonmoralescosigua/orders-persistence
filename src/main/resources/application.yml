@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/cursoGtk}
-    username: ${POSTGRES_USER:admin}
-    password: ${POSTGRES_PASSWORD:admin123}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,30 +15,26 @@ spring:
     stream:
       bindings:
         ingestPostgres-in-0:
-          destination: ${TOPIC_IN:general.alimentos.retail.guatemala.procesada}
-          group: ${GROUP_IN:IngestaPostgres}
+          destination: ${TOPIC_IN}
+          group: ${GROUP_IN}
           consumer:
-            concurrency: ${CONSUMER_CONCURRENCY:5}
-            meter:
-              enabled: false
+            concurrency: ${CONSUMER_CONCURRENCY}
+        ingestPostgres-out-0:
+          destination: ${TOPIC_OUT}    # ← Publica aquí automáticamente
+
       binders:
         local-solace:
           type: solace
           environment:
             solace:
               java:
-                host: ${SOLACE_HOST}
-                msgVpn: ${SOLACE_VPN}
-                clientUsername: ${SOLACE_USERNAME}
-                clientPassword: ${SOLACE_PASSWORD}
-                connectRetries: ${SOLACE_CONNECT_RETRIES:3}
-                connectRetriesPerHost: ${SOLACE_CONNECT_RETRIES_PER_HOST:0}
-                reconnectRetries: ${SOLACE_RECONNECT_RETRIES:3}
-      solace:
-        bindings:
-          ingestPostgres-in-0:
-            consumer:
-              queueAdditionalSubscriptions: ${TOPIC_SUB:general/alimentos/retail/guatemala/procesada}
+                host: tcp://localhost:55556
+                msgVpn: default
+                clientUsername: default
+                clientPassword: default
+                connectRetries: ${SOLACE_CONNECT_RETRIES}
+                connectRetriesPerHost: ${SOLACE_CONNECT_RETRIES_PER_HOST}
+                reconnectRetries: ${SOLACE_RECONNECT_RETRIES}
 
 server:
-  port: ${SERVER_PORT:8094}
+  port: ${SERVER_PORT}
