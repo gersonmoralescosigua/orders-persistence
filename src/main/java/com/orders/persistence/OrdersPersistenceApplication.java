@@ -23,11 +23,10 @@ public class OrdersPersistenceApplication {
         return event -> {
             try {
                 EventEnvelope enriched = service.persistScored(event);
-                System.out.println("✅ Orden persistida y publicada: " + enriched.getPayload().getOrderId());
                 return enriched;  // ← EventEnvelope con status agregado en meta
 
             } catch (Exception e) {
-                System.err.println("❌ Error persistiendo orden: " + e.getMessage());
+                System.err.println("❌ Error al procesar la orden: " + e.getMessage());
                 throw new RuntimeException("Error en pipeline", e);
             }
         };
